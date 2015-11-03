@@ -13,28 +13,28 @@ The MQTT plugin is used in first time to received specific **Topic** message and
 MQTT Topic sensor
 -----------------
 
-    sensor/DEVICE/TYPE/CURRENT
-    
-    domogik/buanderie/luminosity 2.6
-    domogik/compteur_edf/energy 78591553
-    domogik/buanderie/temp 14.4
-    domogik/sejour/temp 19.5
-    domogik/sejour/humidity 45
-    domogik/compteur_edf/energy 78591554
+	sensor/DEVICE/TYPE/CURRENT
+	
+	domogik/buanderie/luminosity 2.6
+	domogik/compteur_edf/energy 78591553
+	domogik/buanderie/temp 14.4
+	domogik/sejour/temp 19.5
+	domogik/sejour/humidity 45
+	domogik/compteur_edf/energy 78591554
 
 
 xPl sensor message
 ------------------
 
-    xpl-trig { hop=1 source=domos-mqtt.ares target=* } sensor.basic { device=DEVICE type=TYPE current=CURRENT }
-    
-    2015-11-01 09:55:33  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=2.6 type=luminosity }
-    2015-11-01 09:55:39  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591553 type=energy }
-    2015-11-01 09:55:44  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=14.4 type=temp }
-    2015-11-01 09:55:47  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=sejour current=19.5 type=temp }
-    2015-11-01 09:55:47  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=sejour current=45 type=humidity }
-    2015-11-01 09:55:49  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591554 type=energy }
-    
+	xpl-trig { hop=1 source=domos-mqtt.ares target=* } sensor.basic { device=DEVICE type=TYPE current=CURRENT }
+	
+	2015-11-01 09:55:33  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=2.6 type=luminosity }
+	2015-11-01 09:55:39  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591553 type=energy }
+	2015-11-01 09:55:44  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=14.4 type=temp }
+	2015-11-01 09:55:47  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=sejour current=19.5 type=temp }
+	2015-11-01 09:55:47  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=sejour current=45 type=humidity }
+	2015-11-01 09:55:49  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591554 type=energy }
+	
 
 
 
@@ -48,13 +48,13 @@ Dependencies
 
 On Debian jessie: 
 
-    # apt-get install mosquitto	(MQTT version 3.1/3.1.1 compatible message broker)
+	# apt-get install mosquitto		(MQTT version 3.1/3.1.1 compatible message broker)
 
 * Python module: paho-mqtt (>=1.1)
 
 On Debian jessie: 
 	
-    # pip install paho-mqtt
+	# pip install paho-mqtt
 
 
 Plugin configuration
