@@ -40,6 +40,9 @@ xPl sensor message
 	2015-11-01 09:55:49  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591554 type=energy }
 	
 
+	
+Plugin Information Page
+-----------------------
 
 
 .. image:: Domogik_MQTT_Plugin_1.png
@@ -64,8 +67,9 @@ On Debian jessie::
 Plugin configuration
 ====================
 
-Here is the global configuration:
 
+Here is the global configuration:
+---------------------------------
 
 ===================== =========================== ======================================================================
 Key                   Type                        Description
@@ -76,6 +80,11 @@ MQTT port             integer                     The TCP port of Mosquitto serv
 --------------------- --------------------------- ----------------------------------------------------------------------
 MQTT Topic            string                      The 'Topic' to subscribe (listen to message publish for this topic)
 ===================== =========================== ======================================================================
+
+
+
+Plugin Configuration Page
+-------------------------
 
 
 .. image:: Domogik_MQTT_Plugin_2.png
