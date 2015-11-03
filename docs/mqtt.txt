@@ -90,8 +90,11 @@ Plugin Configuration Page
 .. image:: Domogik_MQTT_Plugin_2.png
 
 
+
+
 Create the domogik devices
 ==========================
+
 
 
 Create device by device type
@@ -112,7 +115,12 @@ device                string                      xPL device parameter
 ===================== =========================== ======================================================================
 
 
+
+Create new device Page
+----------------------
+
 .. image:: Domogik_MQTT_Plugin_3b.png
+
 
 
 
@@ -123,6 +131,8 @@ Some MQTT device created:
 
 
 
+
+
 Start the plugin
 ================
 
@@ -130,10 +140,12 @@ You can now start the plugin (start button) and use the created domogik devices.
 
 
 
+
 Set up your widgets on the user interface
 =========================================
 
 You can now place the widgets of your devices features on the user interface.
+
 
 .. image:: Domogik_MQTT_Plugin_5.png
 
