@@ -13,6 +13,8 @@ The MQTT plugin is used in first time to received specific **Topic** message and
 MQTT Topic sensor
 -----------------
 
+.. code-block:: none
+
 	sensor/DEVICE/TYPE/CURRENT
 	
 	domogik/buanderie/luminosity 2.6
@@ -25,6 +27,8 @@ MQTT Topic sensor
 
 xPl sensor message
 ------------------
+
+.. code-block:: none
 
 	xpl-trig { hop=1 source=domos-mqtt.ares target=* } sensor.basic { device=DEVICE type=TYPE current=CURRENT }
 	
@@ -46,13 +50,13 @@ Dependencies
 
 * The mosquittto MQTT server en local or remote host
 
-On Debian jessie: 
+On Debian jessie:: 
 
 	# apt-get install mosquitto		(MQTT version 3.1/3.1.1 compatible message broker)
 
 * Python module: paho-mqtt (>=1.1)
 
-On Debian jessie: 
+On Debian jessie::
 	
 	# pip install paho-mqtt
 
@@ -67,9 +71,9 @@ Here is the global configuration:
 Key                   Type                        Description
 ===================== =========================== ======================================================================
 MQTT Host             string                      The hostnmae/@Ip of Mosquitto server
-===================== =========================== ======================================================================
+--------------------- --------------------------- ----------------------------------------------------------------------
 MQTT port             integer                     The TCP port of Mosquitto server
-===================== =========================== ======================================================================
+--------------------- --------------------------- ----------------------------------------------------------------------
 MQTT Topic            string                      The 'Topic' to subscribe (listen to message publish for this topic)
 ===================== =========================== ======================================================================
 
@@ -80,6 +84,7 @@ MQTT Topic            string                      The 'Topic' to subscribe (list
 Create the domogik devices
 ==========================
 
+
 Create device by device type
 ----------------------------
 
@@ -89,6 +94,7 @@ There is different devices type for different sensors type (Temperature, Humidit
 
 
 One parameter are needed for a domogik device creation:
+
 
 ===================== =========================== ======================================================================
 Key                   Type                        Description
