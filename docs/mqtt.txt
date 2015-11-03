@@ -44,7 +44,7 @@ xPl sensor message
 Dependencies
 ============
 
-* Th mosquittto MQTT server en local or remote host
+* The mosquittto MQTT server en local or remote host
 
 On Debian jessie: 
 
