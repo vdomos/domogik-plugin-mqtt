@@ -46,6 +46,7 @@ Plugin Information Page
 
 
 .. image:: Domogik_MQTT_Plugin_1.png
+	:width: 400 px
 
 
 Dependencies
@@ -88,6 +89,7 @@ Plugin Configuration Page
 
 
 .. image:: Domogik_MQTT_Plugin_2.png
+	:width: 400 px
 
 
 
@@ -103,6 +105,7 @@ Create device by device type
 There is different devices type for different sensors type (Temperature, Humidity, Luminosity ...)
 
 .. image:: Domogik_MQTT_Plugin_3a.png
+	:width: 400 px
 
 
 One parameter are needed for a domogik device creation:
@@ -120,6 +123,7 @@ Create new device Page
 ----------------------
 
 .. image:: Domogik_MQTT_Plugin_3b.png
+	:width: 400 px
 
 
 
@@ -128,6 +132,7 @@ Some MQTT device created:
 ------------------------
 
 .. image:: Domogik_MQTT_Plugin_4.png
+	:width: 400 px
 
 
 
