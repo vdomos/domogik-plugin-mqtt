@@ -24,4 +24,3 @@ To install this package on your Domogik system, you can go in this GitHub reposi
     dmg_package -i https://github.com/vdomos/domogik-plugin-mqtt/archive/master.zip
 
     
-    
