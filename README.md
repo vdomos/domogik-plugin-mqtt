@@ -1,11 +1,13 @@
 # Domogik Plugin mqtt
 Domogik Plugin for received MQTT sensor messages
 
+
 # Purpose
 
 This is a package for Domogik : http://www.domogik.org
 
 Domogik is an open source home automation solution.
+
 
 # Documentation 
 
@@ -13,6 +15,7 @@ You can find the documentation source in the **docs/** folder. When the package 
 You may also find online documentation for this plugin. You will be able to find the documentation url on 
 
 http://domogik-plugin-mqtt.readthedocs.org/en/latest/index.html
+
 
 # Install the package
 
