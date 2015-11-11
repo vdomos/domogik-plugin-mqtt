@@ -92,24 +92,29 @@ class MQTT:
 	# -------------------------------------------------------------------------------------------------
 	def on_connect(self, client, userdata, flags, rc):			# The callback for when the client receives a CONNACK response from the server.
 		if rc == 0:
-			self.log.info("### Connection successful, (Result code 0)")
+			self.log.info("### Connection to MQTT broquer successful, (Result code 0)")
 			self.MQTTClient.subscribe(self.mqtttopic)				# Subscribing in on_connect() means that if we lose the connection and econnect then subscriptions will be renewed.
 		else:
-			self.log.error("### Connection unsuccessful, (Result code " + str(rc) + ": " + CONNECT_RESULT_CODES[rc] + ")") 
+			self.log.error("### Connection to MQTT broquer unsuccessful, (Result code " + str(rc) + ": " + CONNECT_RESULT_CODES[rc] + ")") 
 			self.MQTTClient.disconnect				# Stop the loop from trying to connect again if unsuccessful.
 		
 	# -------------------------------------------------------------------------------------------------
 	def on_disconnect(self, client, userdata, rc):
-		self.log.info("Connection has been lost.") 
+		self.log.info("Connection to MQTT broquer has been lost.") 
 		self.log.info("Attempting to reconnect in 20s.")		# This will automatically reconnect if connection is lost.
 		time.sleep(20)   
 		self.MQTTClient.connect(MQTTHOST, 1883, 60)
 
 
 	# -------------------------------------------------------------------------------------------------
-	def on_message(self, client, userdata, msg):		# The callback for when a PUBLISH message is received from the server.
+	def on_message(self, client, userdata, msg):		# The callback for when a PUBLISH message is received from the broquer.
 		self.log.info("Received MQTT message:  %s = %s" % (msg.topic, msg.payload))
-		(topic, xpldevice, xpltype) = msg.topic.split('/')
+		try:
+			(topic, xpldevice, xpltype) = msg.topic.split('/')
+		except ValueError:
+			self.log.error("### Incorrectly formatted Topic message '%s', ignore it." % msg.topic)
+			return
+
 		xplcurrent = msg.payload
 		self.cb_send_xpl(schema = "sensor.basic",
 						 data  = {"device" : xpldevice,
@@ -118,12 +123,12 @@ class MQTT:
 
 	# -------------------------------------------------------------------------------------------------
 	def connect(self):
-		self.log.info("### Connecting to MQTT server ...")
+		self.log.info("### Connecting to MQTT broquer ...")
 		try:
 			self.MQTTClient.connect(self.mqtthost, int(self.mqttport), 60)
-			self.log.info("### Connected on MQTT server")
+			self.log.info("### Connected on MQTT broquer")
 		except:
-			error = "Error while connecting to MQTT server : %s " % str(traceback.format_exc())
+			error = "Error while connecting to MQTT broquer : %s " % str(traceback.format_exc())
 			raise MQTTException(error)
 
 
