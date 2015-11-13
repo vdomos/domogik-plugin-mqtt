@@ -8,3 +8,4 @@ Table Of Content
     /mqtt
     /dev
     /changelog
+    /annexes
