@@ -6,5 +6,6 @@ Table Of Content
 .. toctree::
 
     /mqtt
+    /dev
+    /tests
     /changelog
-    /annexes

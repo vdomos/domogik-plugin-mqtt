@@ -125,7 +125,7 @@ Create new device Page
 
 
 Some MQTT device created:
-------------------------
+-------------------------
 
 .. image:: Domogik_MQTT_Plugin_4.png
 

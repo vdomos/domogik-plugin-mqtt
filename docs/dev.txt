@@ -1,0 +1,34 @@
+========================
+Development informations
+========================
+
+N/A
+
+
+
+MQTT messages tests
+===================
+
+In Command line with mosquitto-clients package
+----------------------------------------------
+
+* Send a sensor message for Domogik Topic
+
+.. code-block:: none
+
+    $ mosquitto_pub -h mosquitto_server -t "domogik/buanderie/luminosity" -m 10
+
+    
+The plugin convert to the xPL message:
+
+.. code-block:: none
+
+    xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=10 type=luminosity }
+    
+    
+    
+With Arduino
+------------
+
+ Lib MQTT Arduino: http://pubsubclient.knolleary.net/
+
