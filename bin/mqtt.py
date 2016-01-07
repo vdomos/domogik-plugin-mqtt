@@ -22,7 +22,7 @@ along with Domogik. If not, see U{http://www.gnu.org/licenses}.
 Plugin purpose
 ==============
 
-MQTT
+MQTT sensors
 
 Implements
 ==========
@@ -46,64 +46,62 @@ import traceback
 
 
 class MQTTManager(XplPlugin):
-	""" 
-	"""
+    """
+    """
 
-	def __init__(self):
-		""" Init plugin
-		"""
-		XplPlugin.__init__(self, name='mqtt')
+    def __init__(self):
+        """ Init plugin
+        """
+        XplPlugin.__init__(self, name='mqtt')
 
- 		# Configuration
-		self.mqtthost = self.get_config("mqtt_host")						 # MQTT server
-		if self.mqtthost == None:
-			self.log.error('### MQTT server is not configured, exiting') 
-			self.force_leave()
-			return
-		self.mqttport = self.get_config("mqtt_port")						 # MQTT server port
-		if self.mqttport == None:
-			self.log.error('### MQTT server port is not configured, exiting') 
-			self.force_leave()
-			return
-		self.mqtttopic = self.get_config("mqtt_topic")						 # MQTT domogik topic
-		if self.mqtttopic == None:
-			self.mqtttopic = "domogik"
+        # Configuration
+        self.mqtthost = self.get_config("mqtt_host")                         # MQTT server
+        if self.mqtthost is None:
+            self.log.error('### MQTT server is not configured, exiting')
+            self.force_leave()
+            return
+        self.mqttport = self.get_config("mqtt_port")                         # MQTT server port
+        if self.mqttport is None:
+            self.log.error('### MQTT server port is not configured, exiting')
+            self.force_leave()
+            return
+        self.mqtttopic = self.get_config("mqtt_topic")                         # MQTT domogik topic
+        if self.mqtttopic is None:
+            self.mqtttopic = "domogik"
 
-		self.mqtt_manager = MQTT(self.log, self.send_xpl, self.get_stop(), self.mqtthost, self.mqttport, self.mqtttopic)
+        self.mqtt_manager = MQTT(self.log, self.send_xpl, self.get_stop(), self.mqtthost, self.mqttport, self.mqtttopic)
 
-       # Connecte to MQTT server
-		try:
-			self.mqtt_manager.connect()
-		except MQTTException as e:
-			self.log.error(e.value)
-			print(e.value)
-			self.force_leave()
-			return
+        # Connecte to MQTT server
+        try:
+            self.mqtt_manager.connect()
+        except MQTTException as e:
+            self.log.error(e.value)
+            print(e.value)
+            self.force_leave()
+            return
 
-		# Start mqtt listen
-		mqtt_process = threading.Thread(None,
-								   self.mqtt_manager.listen,
-								   "mqtt-process-listen",
-								   (self.get_stop(),),
-								   {})
-		self.register_thread(mqtt_process)
-		mqtt_process.start()
+        # Start mqtt listen
+        mqtt_process = threading.Thread(None,
+                                        self.mqtt_manager.listen,
+                                        "mqtt-process-listen",
+                                        (self.get_stop(), ),
+                                        {})
+        self.register_thread(mqtt_process)
+        mqtt_process.start()
 
-		self.ready()
+        self.ready()
 
-
-	def send_xpl(self, message = None, schema = None, data = {}):
-		""" Send xPL message on network
-		"""
-		self.log.debug(u"send_xpl : Send xPL message xpl-trig : schema:{0}, data:{1}".format(schema, data))
-		msg = XplMessage()
-		msg.set_type("xpl-trig")
-		msg.set_schema(schema)
-		for key in data:
-			msg.add_data({key : data[key]})
-		self.myxpl.send(msg)
-
+    def send_xpl(self, message=None, schema=None, data={}):
+        """ Send xPL message on network
+        """
+        self.log.debug(u"send_xpl : Send xPL message xpl-trig : schema:{0}, data:{1}".format(schema, data))
+        msg = XplMessage()
+        msg.set_type("xpl-trig")
+        msg.set_schema(schema)
+        for key in data:
+            msg.add_data({key: data[key]})
+        self.myxpl.send(msg)
 
 
 if __name__ == "__main__":
-	MQTTManager()
+    MQTTManager()
