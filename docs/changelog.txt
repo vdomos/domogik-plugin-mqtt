@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.5
+===
+
+* No xPL version and adding publishing fonctionnality
+
 0.1
 ===
 

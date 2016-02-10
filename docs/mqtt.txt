@@ -7,45 +7,13 @@ Plugin MQTT
 Purpose
 =======
 
-The MQTT plugin is used in first time to received specific **Topic** message and convert them to xPL messages for Domogik.
+The MQTT plugin is used to received subcribed **Topic** for Domogik sensors or **publish** Domogik command value from a Mosquitto server.
 
-
-MQTT Topic sensor
------------------
-
-.. code-block:: none
-
-	sensor/DEVICE/TYPE/CURRENT
-	
-	domogik/buanderie/luminosity 2.6
-	domogik/compteur_edf/energy 78591553
-	domogik/buanderie/temp 14.4
-	domogik/sejour/temp 19.5
-	domogik/sejour/humidity 45
-	domogik/compteur_edf/energy 78591554
-
-
-xPl sensor message
-------------------
-
-.. code-block:: none
-
-	xpl-trig { hop=1 source=domos-mqtt.ares target=* } sensor.basic { device=DEVICE type=TYPE current=CURRENT }
-	
-	2015-11-01 09:55:33  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=2.6 type=luminosity }
-	2015-11-01 09:55:39  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591553 type=energy }
-	2015-11-01 09:55:44  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=14.4 type=temp }
-	2015-11-01 09:55:47  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=sejour current=19.5 type=temp }
-	2015-11-01 09:55:47  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=sejour current=45 type=humidity }
-	2015-11-01 09:55:49  xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=compteur_edf current=78591554 type=energy }
-	
+THis is a No xPL version.
 
 	
 Plugin Information Page
 -----------------------
-
-
-.. image:: Domogik_MQTT_Plugin_1.png
 
 
 Dependencies
@@ -77,18 +45,7 @@ Key                   Type                        Description
 MQTT Host             string                      The hostnmae/@Ip of Mosquitto server
 --------------------- --------------------------- ----------------------------------------------------------------------
 MQTT port             integer                     The TCP port of Mosquitto server
---------------------- --------------------------- ----------------------------------------------------------------------
-MQTT Topic            string                      The 'Topic' to subscribe (listen to message publish for this topic)
 ===================== =========================== ======================================================================
-
-
-
-Plugin Configuration Page
--------------------------
-
-
-.. image:: Domogik_MQTT_Plugin_2.png
-
 
 
 
@@ -96,41 +53,47 @@ Create the domogik devices
 ==========================
 
 
-
 Create device by device type
 ----------------------------
 
-There is different devices type for different sensors type (Temperature, Humidity, Luminosity ...)
+There is different devices type for sensors (Temperature, Humidity, OpneCLose, OnOff, String ...) and for commands (Switch, String)
 
-.. image:: Domogik_MQTT_Plugin_3a.png
-
-
-One parameter are needed for a domogik device creation:
-
+Two parameter are needed for a domogik device creation:
 
 ===================== =========================== ======================================================================
 Key                   Type                        Description
 ===================== =========================== ======================================================================
-device                string                      xPL device parameter
+MQTT Topic            string                      The 'Topic' to subscribe (sensor) or to publish (command)
+--------------------- --------------------------- ----------------------------------------------------------------------
+MQTT Qos              Integer                     Quality of service level to use => 0..2, 0 by default
 ===================== =========================== ======================================================================
 
+Topic:
+
+Messages in MQTT are published on topics. Topics are treated as a hierarchy, using a slash (/) as a separator. 
+This provides a logical structure of common themes to be created, much like any file system you have used. 
+So, for example, multiple computers could publish their hard drive temperature information on the following single topic, 
+by inserting their unique computer and hard drive name: sensors/COMPUTER_NAME/temperature/HARDDRIVE_NAME
+
+Example of Topic: ::
+
+    To subscribe (the plugin listen to this topic to update device sensor):
+    domogik/house/livingtemp    (To received the temperature of th livin-room)
+    domogik/meteo/garden/temp   (To received the inside temperature)
+    
+    To publish (the plugin send this topic message for other MQTT client):
+    arduino/relay1          (to set on/off a relay on Arduino with MQTT lib)
+    kody/command/notify     (To send a notification to kodi)
 
 
-Create new device Page
-----------------------
+Quality of Service:
 
-.. image:: Domogik_MQTT_Plugin_3b.png
-
-
-
-
-Some MQTT device created:
--------------------------
-
-.. image:: Domogik_MQTT_Plugin_4.png
+* 0: The broker/client will deliver the message once, with no confirmation (fire and forget).
+* 1: The broker/client will deliver the message at least once, with confirmation required  (no tested in the plugin).
+* 2: The broker/client will deliver the message exactly once by using a four-step handshake  (no tested in the plugin).
 
 
-
+See **Dev page** to test subscribing or publishing message in Command line.
 
 
 Start the plugin
@@ -140,12 +103,15 @@ You can now start the plugin (start button) and use the created domogik devices.
 
 
 
-
 Set up your widgets on the user interface
 =========================================
 
 You can now place the widgets of your devices features on the user interface.
 
 
-.. image:: Domogik_MQTT_Plugin_5.png
+
+Troubleshooting
+===============
+
+You can see  **ERROR** or **WARNING** messages in the **Advanced Panel** of the Admin interface.
 
