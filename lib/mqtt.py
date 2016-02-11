@@ -111,10 +111,11 @@ class MQTT:
     def on_disconnect(self, client, userdata, rc):
         """ The callback when disconnecting from MQTT server
         """
-        self.log.error(u"### Connection to MQTT broquer has been lost.")
-        self.log.error(u"### Attempting to reconnect in 20s.")        # This will automatically reconnect if connection is lost.
-        time.sleep(20)
-        self.MQTTClient.connect(MQTTHOST, 1883, 60)
+        if not stop.isSet():
+            self.log.error(u"### Connection to MQTT broquer has been lost.")
+            self.log.error(u"### Attempting to reconnect in 20s.")        # This will automatically reconnect if connection is lost.
+            time.sleep(20)
+            self.MQTTClient.connect(MQTTHOST, 1883, 60)
 
 
     # -------------------------------------------------------------------------------------------------
