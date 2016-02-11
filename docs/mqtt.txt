@@ -9,7 +9,7 @@ Purpose
 
 The MQTT plugin is used to received **subcribed Topic** for Domogik sensors from a Mosquitto server or **Publish Topic** Domogik command value to a Mosquitto server.
 
-This is a No xPL version.
+This is a "No xPL" version.
 
 	
 Plugin Information Page
@@ -79,7 +79,7 @@ Example of Topic:
 
 To subscribe (the plugin listen to this topic to update device sensor): ::
 
-    domogik/house/livingtemp    (To received the temperature of th livin-room)
+    domogik/house/livingtemp    (To received the temperature of the living-room)
     domogik/meteo/garden/temp   (To received the inside temperature)
     
 To publish (the plugin send this topic message for other MQTT client): ::
