@@ -19,6 +19,8 @@ In Command line with mosquitto-clients package
     
 * Subscribe to a command message for "domogik/command/#" Topic
     
+.. code-block:: none
+
     $ mosquitto_sub -h mosquitto_server -t "domogik/command/#" -v
     ...
   

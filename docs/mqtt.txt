@@ -7,9 +7,9 @@ Plugin MQTT
 Purpose
 =======
 
-The MQTT plugin is used to received subcribed **Topic** for Domogik sensors or **publish** Domogik command value from a Mosquitto server.
+The MQTT plugin is used to received **subcribed Topic** for Domogik sensors from a Mosquitto server or **Publish Topic** Domogik command value to a Mosquitto server.
 
-THis is a No xPL version.
+This is a No xPL version.
 
 	
 Plugin Information Page
@@ -19,7 +19,7 @@ Plugin Information Page
 Dependencies
 ============
 
-* The mosquittto MQTT server en local or remote host
+* A mosquittto MQTT server on local or remote host
 
 On Debian jessie:: 
 
@@ -58,14 +58,14 @@ Create device by device type
 
 There is different devices type for sensors (Temperature, Humidity, OpneCLose, OnOff, String ...) and for commands (Switch, String)
 
-Two parameter are needed for a domogik device creation:
+Two parameters are needed for a domogik device creation:
 
 ===================== =========================== ======================================================================
 Key                   Type                        Description
 ===================== =========================== ======================================================================
 MQTT Topic            string                      The 'Topic' to subscribe (sensor) or to publish (command)
 --------------------- --------------------------- ----------------------------------------------------------------------
-MQTT Qos              Integer                     Quality of service level to use => 0..2, 0 by default
+MQTT Qos              Integer                     Quality of service level to use => 0..2, (0 by default)
 ===================== =========================== ======================================================================
 
 Topic:
@@ -75,13 +75,15 @@ This provides a logical structure of common themes to be created, much like any 
 So, for example, multiple computers could publish their hard drive temperature information on the following single topic, 
 by inserting their unique computer and hard drive name: sensors/COMPUTER_NAME/temperature/HARDDRIVE_NAME
 
-Example of Topic: ::
+Example of Topic:
 
-    To subscribe (the plugin listen to this topic to update device sensor):
+To subscribe (the plugin listen to this topic to update device sensor): ::
+
     domogik/house/livingtemp    (To received the temperature of th livin-room)
     domogik/meteo/garden/temp   (To received the inside temperature)
     
-    To publish (the plugin send this topic message for other MQTT client):
+To publish (the plugin send this topic message for other MQTT client): ::
+
     arduino/relay1          (to set on/off a relay on Arduino with MQTT lib)
     kody/command/notify     (To send a notification to kodi)
 
