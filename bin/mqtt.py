@@ -165,7 +165,7 @@ class MQTTManager(Plugin):
                 self.send_pub_data(device_id, data["value"])    # Update sensor command.
             
             # Reply MQ REP (acq) to REQ command
-            self.send_rep_ack(True, None, command_id, device_name) ;                 # With thread, no possible to return a error script to MQ !
+            self.send_rep_ack(status, reason, command_id, device_name) ;
 
 
     # -------------------------------------------------------------------------------------------------
