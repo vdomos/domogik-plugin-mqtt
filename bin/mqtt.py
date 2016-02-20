@@ -111,7 +111,7 @@ class MQTTManager(Plugin):
         threads[thr_name] = threading.Thread(None,
                                               self.mqttClient.listensub,
                                               thr_name,
-                                              ( self.get_stop(),),
+                                              (),
                                               {})
         threads[thr_name].start()
         self.register_thread(threads[thr_name])

@@ -39,6 +39,7 @@ import traceback
 import threading
 import time
 import datetime
+import platform
 import paho.mqtt.client as mqtt     # https://pypi.python.org/pypi/paho-mqtt
 
 # -------------------------------------------------------------------------------------------------
@@ -84,7 +85,7 @@ class MQTT:
         self.mqttport = mqttport
         self.mqtttopic = mqtttopic        
         
-        self.MQTTClient = mqtt.Client('mqtt2dmg')
+        self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node())
         self.MQTTClient.on_connect = self.on_connect
         self.MQTTClient.on_message = self.on_message
         self.MQTTClient.on_disconnect = self.on_disconnect
@@ -111,7 +112,7 @@ class MQTT:
     def on_disconnect(self, client, userdata, rc):
         """ The callback when disconnecting from MQTT server
         """
-        if not stop.isSet():
+        if not self.stop.isSet():
             self.log.error(u"### Connection to MQTT broquer has been lost.")
             self.log.error(u"### Attempting to reconnect in 20s.")        # This will automatically reconnect if connection is lost.
             time.sleep(20)
@@ -149,13 +150,12 @@ class MQTT:
 
 
     # -------------------------------------------------------------------------------------------------
-    def listensub(self, stop):
+    def listensub(self):
         """ Start listening to mqtt topic messages
-        @param stop : an Event to wait for stop request
         """
         self.log.debug(u"==> Listen Topic list:  %s" % format(self.mqtttopic))        # ==> 
      
-        while not stop.isSet():
+        while not self.stop.isSet():
             self.MQTTClient.loop()
         self.log.info(u"==> Stop listening MQTT message.")
         self.MQTTClient.disconnect()
