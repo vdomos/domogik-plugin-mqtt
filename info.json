@@ -25,7 +25,7 @@
             "id": "mqtt.sensor_temperature", 
             "name": "Temperature sensor",
             "commands": [],
-            "sensors": ["sensor_mqtt_temperature"],
+            "sensors": ["mqtt_temperature"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -47,7 +47,7 @@
             "id": "mqtt.sensor_humidity", 
             "name": "Humidity sensor",
             "commands": [],
-            "sensors": ["sensor_mqtt_humidity"],
+            "sensors": ["mqtt_humidity"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -69,7 +69,7 @@
             "id": "mqtt.sensor_number", 
             "name": "Number sensor",
             "commands": [],
-            "sensors": ["sensor_mqtt_number"],
+            "sensors": ["mqtt_number"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -91,7 +91,7 @@
             "id": "mqtt.sensor_onoff", 
             "name": "OnOff sensor",
             "commands": [],
-            "sensors": ["sensor_mqtt_onoff"],
+            "sensors": ["mqtt_onoff"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -113,7 +113,7 @@
             "id": "mqtt.sensor_openclose", 
             "name": "OpenClose sensor",
             "commands": [],
-            "sensors": ["sensor_mqtt_openclose"],
+            "sensors": ["mqtt_openclose"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -135,7 +135,7 @@
             "id": "mqtt.sensor_string", 
             "name": "String sensor",
             "commands": [],
-            "sensors": ["sensor_mqtt_string"],
+            "sensors": ["mqtt_string"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -156,8 +156,8 @@
             "description": "", 
             "id": "mqtt.cmd_switch", 
             "name": "OnOff command",
-            "commands": ["command_mqtt_onoff"],
-            "sensors": ["sensor_mqtt_onoff"],
+            "commands": ["mqtt_onoff"],
+            "sensors": ["mqtt_onoff"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/command ...)",
@@ -178,8 +178,8 @@
             "description": "", 
             "id": "mqtt.cmd_string", 
             "name": "String command",
-            "commands": ["command_mqtt_string"],
-            "sensors": ["sensor_mqtt_string"],
+            "commands": ["mqtt_string"],
+            "sensors": ["mqtt_string"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/command ...)",
@@ -199,7 +199,7 @@
     }, 
 
     "commands": { 
-        "command_mqtt_onoff" : {
+        "mqtt_onoff" : {
             "name" : "MQTT Switch",
             "return_confirmation" : true,
             "parameters" : [
@@ -210,7 +210,7 @@
                 }
             ]
         },
-        "command_mqtt_string" : {
+        "mqtt_string" : {
             "name" : "MQTT string",
             "return_confirmation" : true,
             "parameters" : [
@@ -224,8 +224,8 @@
     },
 
     "sensors": {
-        "sensor_mqtt_temperature": {
-            "name": "MQTT Temperature",
+        "mqtt_temperature": {
+            "name": "Temperature",
             "incremental" : false,
             "data_type": "DT_Temp",
             "conversion": "",
@@ -238,8 +238,8 @@
                 "round_value": 0
             }
         },
-        "sensor_mqtt_humidity": {
-            "name": "MQTT Humidity",
+        "mqtt_humidity": {
+            "name": "Humidity",
             "incremental" : false,
             "data_type": "DT_Humidity",
             "conversion": "",
@@ -252,8 +252,8 @@
                 "round_value": 0
             }
         },
-        "sensor_mqtt_number": {
-            "name": "MQTT Number",
+        "mqtt_number": {
+            "name": "Number",
             "incremental" : false,
             "data_type": "DT_Number",
             "conversion": "",
@@ -266,8 +266,8 @@
                 "round_value": 0
             }
         },
-        "sensor_mqtt_onoff": {
-            "name": "MQTT OnOff",
+        "mqtt_onoff": {
+            "name": "OnOff",
             "incremental" : false,
             "data_type": "DT_Switch",
             "conversion": "",
@@ -280,8 +280,8 @@
                 "round_value": 0
             }
         },   
-        "sensor_mqtt_openclose": {
-            "name": "MQTT OpenClose",
+        "mqtt_openclose": {
+            "name": "OpenClose",
             "incremental" : false,
             "data_type": "DT_OpenClose",
             "conversion": "",
@@ -294,8 +294,8 @@
                 "round_value": 0
             }
         },
-        "sensor_mqtt_string": {
-            "name": "MQTT String",
+        "mqtt_string": {
+            "name": "String",
             "incremental" : false,
             "data_type": "DT_String",
             "conversion": "",
