@@ -160,7 +160,7 @@
             "sensors": ["mqtt_onoff"],
             "parameters": [
                 {
-                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/command ...)",
+                    "description": "MQTT topic for publishing (ex.: domogik, domogik/command ...)",
                     "key": "topic",
                     "xpl" : false,
                     "type": "string"
@@ -182,7 +182,7 @@
             "sensors": ["mqtt_string"],
             "parameters": [
                 {
-                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/command ...)",
+                    "description": "MQTT topic for publishing (ex.: domogik, domogik/command ...)",
                     "key": "topic",
                     "xpl" : false,
                     "type": "string"
