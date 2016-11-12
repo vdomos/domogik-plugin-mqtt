@@ -98,31 +98,37 @@ class MQTT:
         if rc == 0:
             self.log.info(u"==> Connection to MQTT broquer successful, (Result code 0)")
             try:            
+                #self.log.debug(u"==> Subscribe to Topic list:  %s" % format(self.mqtttopic))        # ==> 
                 self.MQTTClient.subscribe(self.mqtttopic)   # Subscribing in on_connect() means that if we lose the connection and econnect then subscriptions will be renewed.
             except ValueError:      # Raises a ValueError if qos is not 0, 1 or 2, or if topic is None or has zero string length, or if topic is not a string, tuple or list.
-                errorstr = u"### There are invalid Qos or Topic in list:  %s" % format(self.mqtttopic)
+                errorstr = u"### Subscribing, invalid Qos or Topic in list:  %s" % format(self.mqtttopic)
                 self.log.error(errorstr)
-                self.MQTTClient.disconnect
+                self.MQTTClient.disconnect()
         else:
             self.log.error(u"### Connection to MQTT broquer failed, (Result code " + str(rc) + ": " + CONNECT_RESULT_CODES[rc] + ")")
-            self.MQTTClient.disconnect                  # Stop the loop from trying to connect again if unsuccessful.
+            self.MQTTClient.disconnect()                  # Stop the loop from trying to connect again if unsuccessful.
 
 
     # -------------------------------------------------------------------------------------------------
     def on_disconnect(self, client, userdata, rc):
         """ The callback when disconnecting from MQTT server
         """
+        '''
         if not self.stop.isSet():
             self.log.error(u"### Connection to MQTT broquer has been lost.")
             self.log.error(u"### Attempting to reconnect in 20s.")        # This will automatically reconnect if connection is lost.
             time.sleep(20)
             self.MQTTClient.connect(MQTTHOST, 1883, 60)
+        '''
+        self.log.error(u"### Disconnecting from MQTT broquer.")
+        self.stop.set()
 
 
     # -------------------------------------------------------------------------------------------------
     def on_message(self, client, userdata, msg):
         """ The callback for when a PUBLISH message is received from the broquer.
         """
+        # Erreur "UnicodeDecodeError: 'ascii' codec can't decode byte" avec prevision pluie !
         self.log.info(u"==> Received subscribed MQTT message:  %s = %s" % (msg.topic, msg.payload))
         for deviceid in self.devicelist:        #  {'70' : {'name': 'Temp Atelier', 'topic': 'domogik/maison/ateliertemp', 'type' : 'mqtt.sensor_temperature', 'qos' : 0}}
             if msg.topic ==  self.devicelist[deviceid]["topic"]:
