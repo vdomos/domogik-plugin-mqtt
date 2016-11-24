@@ -64,6 +64,28 @@
                 }
             ]
         },
+        "mqtt.sensor_scaling": {
+            "description": "", 
+            "id": "mqtt.sensor_scaling", 
+            "name": "Scaling sensor",
+            "commands": [],
+            "sensors": ["mqtt_scaling"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
         "mqtt.sensor_number": {
             "description": "", 
             "id": "mqtt.sensor_number", 
@@ -174,6 +196,28 @@
                 }
             ]
         },
+        "mqtt.cmd_scaling": {
+            "description": "", 
+            "id": "mqtt.cmd_scaling", 
+            "name": "Scaling command",
+            "commands": ["mqtt_scaling"],
+            "sensors": ["mqtt_scaling"],
+            "parameters": [
+                {
+                    "description": "MQTT topic for publishing (ex.: domogik, domogik/command ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
         "mqtt.cmd_string": {
             "description": "", 
             "id": "mqtt.cmd_string", 
@@ -210,6 +254,17 @@
                 }
             ]
         },
+        "mqtt_scaling" : {
+            "name" : "MQTT Scaling",
+            "return_confirmation" : true,
+            "parameters" : [
+                {
+                    "key" : "value",
+                    "data_type" : "DT_Scaling",
+                    "conversion" : ""
+                }
+            ]
+        },
         "mqtt_string" : {
             "name" : "MQTT string",
             "return_confirmation" : true,
@@ -242,6 +297,20 @@
             "name": "Humidity",
             "incremental" : false,
             "data_type": "DT_Humidity",
+            "conversion": "",
+            "timeout" : 600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_scaling": {
+            "name": "Scalling",
+            "incremental" : false,
+            "data_type": "DT_Scaling",
             "conversion": "",
             "timeout" : 600,
             "history": {
@@ -327,7 +396,7 @@
                 "type": "python"
             }
         ],
-        "description": "Domogik (no xPL) Plugin to subscribe or publish MQTT messages.",
+        "description": "Domogik Plugin to subscribe or publish MQTT messages.",
         "domogik_min_version": "0.5.0", 
         "name": "mqtt", 
         "type": "plugin", 
