@@ -400,7 +400,7 @@
         "domogik_min_version": "0.5.0", 
         "name": "mqtt", 
         "type": "plugin", 
-        "version": "0.5"
+        "version": "1.0"
     }, 
 
     "json_version": 2
