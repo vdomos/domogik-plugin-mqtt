@@ -385,7 +385,7 @@
     "identity": {
         "author": "domos", 
         "author_email": "domos.vesta at gmail.com", 
-        "tags": ["protocole"], 
+        "tags": ["protocole", "messaging"], 
         "dependencies": [
             {   
                 "id": "Mosquitto server",
