@@ -4,28 +4,26 @@ Development informations
 
 N/A
 
-
-
 MQTT messages tests
 ===================
 
 In Command line with mosquitto-clients package
 ----------------------------------------------
 
-* Send a sensor message for Domogik Topic
+* Publish a sensor message for "domogik/sensor/ Topic
 
 .. code-block:: none
 
-    $ mosquitto_pub -h mosquitto_server -t "domogik/buanderie/luminosity" -m 10
+    $ mosquitto_pub -h mosquitto_server -t "domogik/sensor/buanderie_temp" -m 18
 
     
-The plugin convert to the xPL message:
-
+* Subscribe to a command message for "domogik/command/#" Topic
+    
 .. code-block:: none
 
-    xpl-trig { hop=1 source=domogik-mqtt.ares target=* } sensor.basic { device=buanderie current=10 type=luminosity }
-    
-    
+    $ mosquitto_sub -h mosquitto_server -t "domogik/command/#" -v
+    ...
+  
     
 With Arduino
 ------------
