@@ -88,10 +88,10 @@ class MQTTManager(Plugin):
             self.log.info(u"==> Device '{0}', id '{1}', type '{2}', topic '{3}', qos '{4}'".format(device_name, device_id, device_type, device_topic, device_qos))
             
             if "sensor" in device_type:        
-                self.log.info(u"==> MQTT topic '%s' from server '%s:%s' will be subscribed for '%s' device Sensor" % (device_topic, self.mqtthost, int(self.mqttport), device_name))
+                self.log.info(u"==> Device '%s' will subscribe to MQTT topic '%s' from server '%s:%s'" % (device_name, device_topic, self.mqtthost, int(self.mqttport)))
                 self.mqtttopic.append(((str(device_topic) + '/#'), int(device_qos)))
             else:
-                self.log.info(u"==> MQTT topic '%s' to server '%s:%s' will be published by '%s' device Command" % (device_topic, self.mqtthost, int(self.mqttport), device_name))
+                self.log.info(u"==> Device '%s' will publish MQTT topic '%s' to server '%s:%s'" % (device_name, device_topic, self.mqtthost, int(self.mqttport), ))
 
         # Init MQTT
         self.mqttClient = MQTT(self.log, self.send_pub_data, self.get_stop(), self.mqtthost, self.mqttport, self.mqtttopic, self.device_list)
@@ -109,7 +109,7 @@ class MQTTManager(Plugin):
         threads = {}
         thr_name = "mqtt-sub-listen"
         threads[thr_name] = threading.Thread(None,
-                                              self.mqttClient.listensub,
+                                              self.mqttClient.mqttloop,
                                               thr_name,
                                               (),
                                               {})

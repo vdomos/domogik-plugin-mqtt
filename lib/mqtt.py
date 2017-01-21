@@ -97,9 +97,12 @@ class MQTT:
         """
         if rc == 0:
             self.log.info(u"==> Connection to MQTT broquer successful, (Result code 0)")
-            try:            
-                #self.log.debug(u"==> Subscribe to Topic list:  %s" % format(self.mqtttopic))        # ==> 
-                self.MQTTClient.subscribe(self.mqtttopic)   # Subscribing in on_connect() means that if we lose the connection and econnect then subscriptions will be renewed.
+            try:  
+                if len(self.mqtttopic) > 0:
+                    self.log.debug(u"==> Subscribe to Topic list:  %s" % format(self.mqtttopic))
+                    self.MQTTClient.subscribe(self.mqtttopic)   # Subscribing in on_connect() means that if we lose the connection and econnect then subscriptions will be renewed.
+                else:
+                    self.log.info(u"==> No MQTT sensor topic to subscribe")
             except ValueError:      # Raises a ValueError if qos is not 0, 1 or 2, or if topic is None or has zero string length, or if topic is not a string, tuple or list.
                 errorstr = u"### Subscribing, invalid Qos or Topic in list:  %s" % format(self.mqtttopic)
                 self.log.error(errorstr)
@@ -156,11 +159,9 @@ class MQTT:
 
 
     # -------------------------------------------------------------------------------------------------
-    def listensub(self):
+    def mqttloop(self):
         """ Start listening to mqtt topic messages
-        """
-        self.log.debug(u"==> Listen Topic list:  %s" % format(self.mqtttopic))        # ==> 
-     
+        """     
         while not self.stop.isSet():
             self.MQTTClient.loop()
         self.log.info(u"==> Stop listening MQTT message.")
