@@ -86,6 +86,7 @@ class MQTT:
         self.mqtttopic = mqtttopic        
         
         self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node())
+        # self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node(), protocol=3)  # For mosquitto that don't support MQTT version 3.1.1 protocol
         self.MQTTClient.on_connect = self.on_connect
         self.MQTTClient.on_message = self.on_message
         self.MQTTClient.on_disconnect = self.on_disconnect
