@@ -32,6 +32,11 @@ On Debian jessie::
 	# pip install paho-mqtt
 
 
+.. warning:: 
+   On Debian Wheezy, mosquitto version is to old, don't support MQTT version 3.1.1 protocol. Need to be upate or MQTT python CLient must be run with protocol parameter in lib/mqtt.py:  self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node(), protocol=3)
+
+
+
 Plugin configuration
 ====================
 
