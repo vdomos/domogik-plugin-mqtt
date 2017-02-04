@@ -16,7 +16,19 @@
             "name" : "MQTT Port",
             "required": true,
             "type": "integer"
-        }
+        },
+        {
+            "key": "mqtt_protocol", 
+            "name": "MQTT protocol",
+            "default": "MQTTv311", 
+            "description": "Select MQTTv31 protocol for old Mosquitto version", 
+            "required": "yes", 
+            "type": "choice",
+            "choices" : {
+                "MQTTv311" : "MQTTv311",
+                "MQTTv31" : "MQTTv31"
+            }
+        }    
     ], 
     
     "device_types": {
@@ -400,7 +412,7 @@
         "domogik_min_version": "0.5.0", 
         "name": "mqtt", 
         "type": "plugin", 
-        "version": "2.20170121"
+        "version": "2.20170204"
     }, 
 
     "json_version": 2
