@@ -98,6 +98,72 @@
                 }
             ]
         },
+        "mqtt.sensor_brightness": {
+            "description": "", 
+            "id": "mqtt.sensor_brightness", 
+            "name": "Brightness sensor",
+            "commands": [],
+            "sensors": ["mqtt_brightness"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_pressure": {
+            "description": "", 
+            "id": "mqtt.sensor_pressure", 
+            "name": "Pressure sensor",
+            "commands": [],
+            "sensors": ["mqtt_pressure"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_power": {
+            "description": "", 
+            "id": "mqtt.sensor_power", 
+            "name": "Power sensor",
+            "commands": [],
+            "sensors": ["mqtt_power"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
         "mqtt.sensor_number": {
             "description": "", 
             "id": "mqtt.sensor_number", 
@@ -148,6 +214,116 @@
             "name": "OpenClose sensor",
             "commands": [],
             "sensors": ["mqtt_openclose"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_enabledisable": {
+            "description": "", 
+            "id": "mqtt.sensor_enable", 
+            "name": "EnableDisable sensor",
+            "commands": [],
+            "sensors": ["mqtt_enabledisable"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_updown": {
+            "description": "", 
+            "id": "mqtt.sensor_updown", 
+            "name": "UpDown sensor",
+            "commands": [],
+            "sensors": ["mqtt_updown"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_lowhigh": {
+            "description": "", 
+            "id": "mqtt.sensor_lowhigh", 
+            "name": "LowHigh sensor",
+            "commands": [],
+            "sensors": ["mqtt_lowhigh"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_state": {
+            "description": "", 
+            "id": "mqtt.sensor_state", 
+            "name": "State sensor",
+            "commands": [],
+            "sensors": ["mqtt_state"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                }
+            ]
+        },
+        "mqtt.sensor_motion": {
+            "description": "", 
+            "id": "mqtt.sensor_motion", 
+            "name": "Motion sensor",
+            "commands": [],
+            "sensors": ["mqtt_motion"],
             "parameters": [
                 {
                     "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
@@ -333,6 +509,48 @@
                 "round_value": 0
             }
         },
+        "mqtt_brightness": {
+            "name": "Brightness",
+            "incremental" : false,
+            "data_type": "DT_Brightness",
+            "conversion": "",
+            "timeout" : 600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_pressure": {
+            "name": "Pressure",
+            "incremental" : false,
+            "data_type": "DT_mbarPressure",
+            "conversion": "",
+            "timeout" : 600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_power": {
+            "name": "Power",
+            "incremental" : false,
+            "data_type": "DT_Power",
+            "conversion": "",
+            "timeout" : 600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
         "mqtt_number": {
             "name": "Number",
             "incremental" : false,
@@ -352,7 +570,7 @@
             "incremental" : false,
             "data_type": "DT_Switch",
             "conversion": "",
-            "timeout" : 600,
+            "timeout" : 3600,
             "history": {
                 "store": true,
                 "duplicate" : false,
@@ -366,7 +584,77 @@
             "incremental" : false,
             "data_type": "DT_OpenClose",
             "conversion": "",
-            "timeout" : 600,
+            "timeout" : 3600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_enabledisable": {
+            "name": "EnableDisable",
+            "incremental" : false,
+            "data_type": "DT_Enable",
+            "conversion": "",
+            "timeout" : 3600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_updown": {
+            "name": "UpDown",
+            "incremental" : false,
+            "data_type": "DT_UpDown",
+            "conversion": "",
+            "timeout" : 3600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_lowhigh": {
+            "name": "LowHigh",
+            "incremental" : false,
+            "data_type": "DT_Binary",
+            "conversion": "",
+            "timeout" : 3600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_state": {
+            "name": "State",
+            "incremental" : false,
+            "data_type": "DT_State",
+            "conversion": "",
+            "timeout" : 3600,
+            "history": {
+                "store": true,
+                "duplicate" : false,
+                "max": 0,
+                "expire": 0,
+                "round_value": 0
+            }
+        },
+        "mqtt_motion": {
+            "name": "Motion",
+            "incremental" : false,
+            "data_type": "DT_Motion",
+            "conversion": "",
+            "timeout" : 3600,
             "history": {
                 "store": true,
                 "duplicate" : false,
@@ -412,7 +700,7 @@
         "domogik_min_version": "0.5.0", 
         "name": "mqtt", 
         "type": "plugin", 
-        "version": "2.20170204"
+        "version": "2.20170512"
     }, 
 
     "json_version": 2

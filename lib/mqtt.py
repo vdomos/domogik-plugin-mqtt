@@ -85,6 +85,17 @@ class MQTT:
         self.mqttport = mqttport
         self.mqttsubtopics = []        
         
+        self.numberSensors = ["mqtt.sensor_temperature", "mqtt.sensor_humidity", "mqtt.sensor_brightness",
+                              "mqtt.sensor_pressure", "mqtt.sensor_power", "mqtt.sensor_number"]
+        self.boolSensors = ["mqtt.sensor_onoff", "mqtt.sensor_openclose", "mqtt.sensor_enabledisable", 
+                            "mqtt.sensor_updown", "mqtt.sensor_lowhigh", "mqtt.sensor_state", "mqtt.sensor_motion"]
+        
+        self.boolStrValue = {"false": "0", "true": "1", "off": "0", "on": "1", "disable": "0", 
+                        "enable": "1", "low": "0", "high": "1", "decrease": "0", "increase": "1", 
+                        "up": "0", "down": "1", "open": "0", "close": "1", "closed": "1", "stop": "0",
+                        "start": "1", "inactive": "0", "active": "1", "nomotion": "0", "motion": "1",
+                        "0": "0", "1": "1"}
+        
         protocollist = {"MQTTv31" : 3, "MQTTv311" : 4}
         self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node(), protocol=protocollist[mqttprotocol])
         # self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node(), protocol=3)  # For mosquitto that don't support MQTT version 3.1.1 protocol
@@ -133,14 +144,16 @@ class MQTT:
         self.log.info(u"==> Received subscribed MQTT message:  %s = %s" % (msg.topic, msg.payload))
         for deviceid in self.devicelist:        #  {'70' : {'name': 'Temp Atelier', 'topic': 'domogik/maison/ateliertemp', 'type' : 'mqtt.sensor_temperature', 'qos' : 0}}
             if msg.topic ==  self.devicelist[deviceid]["topic"]:
-                if self.devicelist[deviceid]["type"] in ["mqtt.sensor_temperature", "mqtt.sensor_humidity", "mqtt.sensor_number"]:
+                if self.devicelist[deviceid]["type"] in self.numberSensors:
                     if not self.is_number(msg.payload):
                         self.log.error(u"### MQTT message '%s' for device '%s' not return a number: '%s'" % (msg.topic, self.devicelist[deviceid]["name"], msg.payload))
                         return
-                elif self.devicelist[deviceid]["type"] in ["mqtt.sensor_onoff", "mqtt.sensor_openclose"]:
-                    if msg.payload not in ['0', '1']:
+                elif self.devicelist[deviceid]["type"] in self.boolSensors:
+                    if msg.payload.lower() not in self.boolStrValue:
                         self.log.error(u"### MQTT message '%s' for device '%s' not return a binary: '%s'" % (msg.topic, self.devicelist[deviceid]["name"], msg.payload))
                         return
+                    msg.payload = self.boolStrValue[msg.payload.lower()]
+                    
                 self.send(deviceid, msg.payload.decode('utf-8', 'ignore'))      # Erreur "UnicodeDecodeError: 'ascii' codec can't decode byte" avec prevision pluie !
 
 
