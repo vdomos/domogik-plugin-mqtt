@@ -12,22 +12,18 @@
                     <thead>
                         <tr>
                             <th>{% trans %}Device{% endtrans %}</th>
-                            <th>{% trans %}Sensor Name{% endtrans %}</th>
-                            <th>{% trans %}Reference{% endtrans %}</th>
+                            <th>{% trans %}Type{% endtrans %}</th>
                             <th>{% trans %}Date{% endtrans %}</th>
                             <th>{% trans %}Value{% endtrans %}</th>
-                            <th>{% trans %}Type{% endtrans %}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for sensor in sensorslist %}
                         <tr>
                             <td>{{ sensor.device }}</td>
-                            <td>{{ sensor.name }}</td>
-                            <td>{{ sensor.reference }}</td>
+                            <td>{{ sensor.type }}</td>
                             <td>{{ sensor.date }}</td>
                             <td>{{ sensor.value }}</td>
-                            <td>{{ sensor.type }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

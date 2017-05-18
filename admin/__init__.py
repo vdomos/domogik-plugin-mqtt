@@ -15,12 +15,14 @@ def get_informations(devices):
     sensorslist = []
     for a_device in devices:
         for a_sensor in a_device["sensors"]:
+            if a_device["sensors"][a_sensor]["last_received"]:
+                last_received = datetime.fromtimestamp(a_device["sensors"][a_sensor]["last_received"]).strftime("%e %b %k:%M")
+            else:
+                last_received = ""
             sensorslist.append({"device": a_device["name"], 
-                                "name": a_device["sensors"][a_sensor]["name"],                                 
-                                "reference": a_device["sensors"][a_sensor]["reference"], 
-                                "date":  datetime.fromtimestamp(a_device["sensors"][a_sensor]["last_received"]).strftime("%e %b %k:%M"), 
-                                "value": a_device["sensors"][a_sensor]["last_value"], 
-                                "type": a_device["sensors"][a_sensor]["data_type"] 
+                                "type": a_device["sensors"][a_sensor]["data_type"].replace("DT_", ""),
+                                "date": last_received, 
+                                "value": a_device["sensors"][a_sensor]["last_value"]
                                 })
     return sensorslist
 
