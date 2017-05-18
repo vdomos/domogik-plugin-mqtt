@@ -3,13 +3,51 @@
 
 {% block content %}
 {% include theme("client_menu.html") %}
+
 <div class="container">
     <div class="panel panel-default">
-		<div class="panel-heading"><h4>{% trans %}Last errors in plugin log{% endtrans %}</h4></div>
+		<div class="panel-heading"><h4>{% trans %}Sensors MQTT list{% endtrans %}</h4></div>
 			<div class="panel-body">
-				<pre>{{ errorlog }}</pre>
+                <table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th>{% trans %}Device{% endtrans %}</th>
+                            <th>{% trans %}Sensor Name{% endtrans %}</th>
+                            <th>{% trans %}Reference{% endtrans %}</th>
+                            <th>{% trans %}Date{% endtrans %}</th>
+                            <th>{% trans %}Value{% endtrans %}</th>
+                            <th>{% trans %}Type{% endtrans %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sensor in sensorslist %}
+                        <tr>
+                            <td>{{ sensor.device }}</td>
+                            <td>{{ sensor.name }}</td>
+                            <td>{{ sensor.reference }}</td>
+                            <td>{{ sensor.date }}</td>
+                            <td>{{ sensor.value }}</td>
+                            <td>{{ sensor.type }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 			</div>
 	</div>
+</div>
+
+
+
+<div class="container">
+    <div class="panel panel-default">
+        <div class="panel-heading"><h5>{% trans %}Plugin log{% endtrans %}</h5></div>
+            <div class="panel-body">
+                <p>{{ logfile }}</p>
+                <pre>{{ errorlog }}</pre>
+                <a href="./{{ clientid }}/log" class="btn btn-info" role="button">{% trans %}Display log file{% endtrans %}</a>
+            </div>
+
+    </div>
 </div>
 
 {% endblock %}
