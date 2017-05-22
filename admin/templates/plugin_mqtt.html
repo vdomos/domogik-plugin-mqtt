@@ -6,8 +6,8 @@
 
 <div class="container">
     <div class="panel panel-default">
-		<div class="panel-heading"><h4>{% trans %}Sensors MQTT list{% endtrans %}</h4></div>
-			<div class="panel-body">
+        <div class="panel-heading"><h4>{% trans %}{{ clientid }} Sensors list{% endtrans %}</h4></div>
+            <div class="panel-body">
                 <table class='table table-striped'>
                     <thead>
                         <tr>
@@ -15,6 +15,7 @@
                             <th>{% trans %}Type{% endtrans %}</th>
                             <th>{% trans %}Date{% endtrans %}</th>
                             <th>{% trans %}Value{% endtrans %}</th>
+                            <th>{% trans %}Graphs{% endtrans %}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,12 +25,67 @@
                             <td>{{ sensor.type }}</td>
                             <td>{{ sensor.date }}</td>
                             <td>{{ sensor.value }}</td>
+                            {% if sensor.type == "Number" or datatypes["DT_" + sensor.type]['parent'] == "DT_Number" or sensor.type == "Bool" or datatypes["DT_" + sensor.type]['parent'] == "DT_Bool" %}
+                                <td><a class="btn btn-primary btn-xs" href="./{{ clientid }}/{{ sensor.id }}/{{ sensor.device }}/{{ sensor.type }}/graph">Display graph</a></td>
+                            {% else %}
+                                <td>-</td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-			</div>
-	</div>
+            </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading"><h4>{% trans %}{{ clientid }} Commands list{% endtrans %}</h4></div>
+            <div class="panel-body">
+                <table class='table table-striped'>
+                    <thead>
+                        <tr>
+                            <th>{% trans %}Device{% endtrans %}</th>
+                            <th>{% trans %}Type{% endtrans %}</th>
+                            <th>{% trans %}Command{% endtrans %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for command in commandslist %}
+                        <tr>
+                            <td>{{ command.device }}</td>
+                            <td>{{ command.type }}</td>
+                            <td>
+                                    {% if command.type == "Bool" or datatypes["DT_" + command.type]['parent'] == "DT_Bool" %}
+                                        {% set url_sample = rest_url + "/cmd/id/" + command.id|string + "?" + command.key + "=" %}
+                                        {% set url_0 = url_sample + "0" %}
+                                        {% set url_1 = url_sample + "1" %}
+                                        <div>
+                                            <a class="btn btn-primary" href="{{ url_1 }}">{{ datatypes["DT_" + command.type]['labels']['1'] }} (1)</a>
+                                            <a class="btn btn-primary" href="{{ url_0 }}">{{ datatypes["DT_" + command.type]['labels']['0'] }} (0)</a>
+                                        </div>
+                                    {% elif command.type == "Trigger" or datatypes["DT_" + command.type]['parent'] == "DT_Trigger" %}
+                                        {% set url_sample = rest_url + "/cmd/id/" + command.id|string + "?" + command.key + "=" %}
+                                        <div>
+                                            <a class="btn btn-primary" href="{{ url_sample }}1">{{ datatypes["DT_" + command.type]['labels']['1'] }} (1)</a>
+                                        </div>
+                                    {% elif command.type == "Number" or datatypes["DT_" + command.type]['parent'] == "DT_Number" or command.type == "String" %}
+                                        <script>function send_string(inputname, paramkey) { var value = document.getElementById(inputname).value; window.location.href="{{ rest_url }}/cmd/id/" + inputname.substring(8) + "?" + paramkey + "=" + value ; } </script>
+                                        <form class="form-inline">
+                                            <div class="input-group">
+                                                <input class="form-control input-sm" type="text" placeholder="{% trans %}Some string...{% endtrans %}" class="form-control" name="cmdInput{{ command.id }}" id="cmdInput{{ command.id }}"></input>
+                                                <span class="input-group-btn">
+                                                <input type="button" class="btn btn-primary btn-sm" id="cmdButton{{ command.id }}" value="{% trans %}Send{% endtrans %}" onclick="send_string('cmdInput{{ command.id }}', '{{ command.key }}')"/></input>
+                                                </span>
+                                            </div>
+                                       </form>
+                                    {% else %}
+                                        -     
+                                    {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </div>
 </div>
 
 
