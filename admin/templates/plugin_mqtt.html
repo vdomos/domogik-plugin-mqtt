@@ -24,19 +24,22 @@
                             <td>{{ sensor.device }}</td>
                             <td>{{ sensor.type }}</td>
                             <td>{{ sensor.date }}</td>
-                            <td>
-                                {% if sensor.value != None %}
-                                    {% set unit = datatypes["DT_" + sensor.type]['unit'] %}
-                                    {% if unit != None %}
-                                        {{ sensor.value }}{{ unit }}
-                                    {% else %}
-                                        {{ sensor.value }}
-                                    {% endif %}
+                            {% if sensor.value != None %}
+                                <td>
+                                {% set unit = datatypes["DT_" + sensor.type]['unit'] %}
+                                {% if unit != None %}
+                                    {{ sensor.value }}{{ unit }}
+                                {% else %}
+                                    {{ sensor.value }}
                                 {% endif %}
-                            </td>
-                            {% if sensor.type == "Number" or datatypes["DT_" + sensor.type]['parent'] == "DT_Number" or sensor.type == "Bool" or datatypes["DT_" + sensor.type]['parent'] == "DT_Bool" %}
-                                <td><a class="btn btn-primary btn-xs" href="./{{ clientid }}/{{ sensor.id }}/{{ sensor.device }}/{{ sensor.type }}/graph">Display graph</a></td>
+                                </td>
+                                {% if sensor.type == "Number" or datatypes["DT_" + sensor.type]['parent'] == "DT_Number" or sensor.type == "Bool" or datatypes["DT_" + sensor.type]['parent'] == "DT_Bool" %}
+                                    <td><a class="btn btn-primary btn-xs" href="./{{ clientid }}/{{ sensor.id }}/{{ sensor.device }}/{{ sensor.type }}/graph">Display graph</a></td>
+                                {% else %}
+                                    <td></td>
+                                {% endif %}
                             {% else %}
+                                <td></td>
                                 <td></td>
                             {% endif %}
                         </tr>
