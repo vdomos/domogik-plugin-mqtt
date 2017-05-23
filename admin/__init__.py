@@ -23,7 +23,7 @@ except ImportError:
 
 
 # -------------------------------------------------------------------------------------------------
-def getsensors(devices):
+def get_sensors(devices):
     sensorslist = []
     for a_device in devices:
         for a_sensor in a_device["sensors"]:
@@ -31,11 +31,11 @@ def getsensors(devices):
                 last_received = datetime.fromtimestamp(a_device["sensors"][a_sensor]["last_received"]).strftime("%e %b %k:%M")
             else:
                 last_received = ""
-            dtype = a_device["sensors"][a_sensor]["data_type"]
+            stype = a_device["sensors"][a_sensor]["data_type"]
             value = a_device["sensors"][a_sensor]["last_value"]
             sensorid = a_device["sensors"][a_sensor]["id"]
             sensorslist.append({"device": a_device["name"], 
-                                "type": dtype.replace("DT_", ""),
+                                "type": stype.replace("DT_", ""),
                                 "date": last_received, 
                                 "value": value,
                                 "id": sensorid
@@ -47,11 +47,11 @@ def get_commands(devices):
     commandslist = []
     for a_device in devices:
         for a_command in a_device["commands"]:
-            dtype = a_device["commands"][a_command]["parameters"][0]["data_type"]
+            stype = a_device["commands"][a_command]["parameters"][0]["data_type"]
             key = a_device["commands"][a_command]["parameters"][0]["key"]
             commandid = a_device["commands"][a_command]["id"]
             commandslist.append({"device": a_device["name"], 
-                                "type": dtype.replace("DT_", ""),
+                                "type": stype.replace("DT_", ""),
                                 "key": key,
                                 "id": commandid
                                 })
@@ -94,6 +94,14 @@ plugin_mqtt_adm = Blueprint(package, __name__,
                         template_folder = template_dir,
                         static_folder = static_dir)
 
+cli = MQSyncReq(zmq.Context())
+msg = MQMessage()
+msg.set_action('datatype.get')
+res = cli.request('manager', msg.get(), timeout=10)
+if res is not None:
+    datatypeslist = res.get_data()['datatypes']
+else:
+    datatypeslist = {}
 
 # -------------------------------------------------------------------------------------------------
 @plugin_mqtt_adm.route('/<client_id>')
@@ -103,25 +111,17 @@ def index(client_id):
     devices = get_client_devices(client_id)     # mqtt plugin devices list
     #print("\n\nget_client_devices = \n%s\n\n" % format(devices))
     
-    cli = MQSyncReq(zmq.Context())
-    msg = MQMessage()
-    msg.set_action('datatype.get')
-    res = cli.request('manager', msg.get(), timeout=10)
-    if res is not None:
-        datatypes = res.get_data()['datatypes']
-    else:
-        datatypes = {}
-
     try:
         return render_template('plugin_mqtt.html',
             clientid = client_id,
             client_detail = detail,
-            mactive="clients",
+            mactive = "clients",
             active = 'advanced',
-            datatypes = datatypes,
+            datatypes = datatypeslist,
             rest_url = request.url_root + "rest",
-            sensorslist = getsensors(devices),
+            sensorslist = get_sensors(devices),
             commandslist = get_commands(devices),
+            logfile = logfile, 
             errorlog = get_errorlog(logfile))
 
     except TemplateNotFound:
@@ -143,7 +143,7 @@ def log(client_id):
         return render_template('plugin_mqtt_log.html',
             clientid = client_id,
             client_detail = detail,
-            mactive="clients",
+            mactive = "clients",
             active = 'advanced',
             logfile = logfile,
             contentLog = content_log)
@@ -153,8 +153,8 @@ def log(client_id):
 
 
 # -------------------------------------------------------------------------------------------------
-@plugin_mqtt_adm.route('/<client_id>/<sensor_id>/<device>/<dtype>/graph')
-def graph(client_id, sensor_id, device, dtype):
+@plugin_mqtt_adm.route('/<client_id>/<sensor_id>/<device>/<stype>/graph')
+def graph(client_id, sensor_id, device, stype):
     flash(gettext(u"Loading data"), "info")
 
     clientid = client_id
@@ -180,15 +180,21 @@ def graph(client_id, sensor_id, device, dtype):
         if historyvalues["status"]:
             for value in historyvalues["values"]:
                 datahistory.append([value["timestamp"] * 1000, value["value_num"]])
+                
+    try:
+        stypeunit = datatypeslist["DT_" + stype]['unit']
+    except KeyError:
+        stypeunit = ""
 
     try:
         return render_template('plugin_mqtt_graph.html',
             clientid = client_id,
             client_detail = detail,
-            mactive="clients",
+            mactive = "clients",
             active = 'advanced',
             device = device,
-            dtype = dtype,
+            stype = stype,
+            unit = stypeunit,
             data = datahistory)
 
     except TemplateNotFound:

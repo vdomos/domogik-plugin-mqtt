@@ -57,7 +57,7 @@
             },
             yAxis: {
                 title: {
-                    text: '{{ dtype }}'
+                    text: '{{ stype }} ({{ unit }})'
                 },
                 opposite: false,
             },
@@ -65,13 +65,14 @@
                 enabled: true
             },
             series: [{
-                name: "{{ dtype }}",
+                name: "{{ stype }}",
                 type: 'line',
                 data: {{ data }},
                 color: '#A4A4A4',
                 lineWidth: 1,
                 tooltip: {
                     valueDecimals: 1,
+                    valueSuffix: '{{ unit }}'
                 },
             }]
         }); 

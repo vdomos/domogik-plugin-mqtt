@@ -1,5 +1,27 @@
 { 
+    "identity": {
+        "author": "domos", 
+        "author_email": "domos.vesta at gmail.com", 
+        "tags": ["protocole", "messaging"], 
+        "dependencies": [
+            {   
+                "id": "Mosquitto server",
+                "type": "package"
+            },
+            {   
+                "id": "paho-mqtt (>=1.1)",
+                "type": "python"
+            }
+        ],
+        "description": "Domogik Plugin to subscribe or publish MQTT messages.",
+        "domogik_min_version": "0.5.0", 
+        "name": "mqtt", 
+        "type": "plugin", 
+        "version": "2.4"
+    }, 
+    
     "products" : [], 
+    
     "configuration": [
         {
             "default": "localhost",
@@ -681,27 +703,6 @@
 
     "xpl_commands": {},     
     "xpl_stats": {}, 
-
-    "identity": {
-        "author": "domos", 
-        "author_email": "domos.vesta at gmail.com", 
-        "tags": ["protocole", "messaging"], 
-        "dependencies": [
-            {   
-                "id": "Mosquitto server",
-                "type": "package"
-            },
-            {   
-                "id": "paho-mqtt (>=1.1)",
-                "type": "python"
-            }
-        ],
-        "description": "Domogik Plugin to subscribe or publish MQTT messages.",
-        "domogik_min_version": "0.5.0", 
-        "name": "mqtt", 
-        "type": "plugin", 
-        "version": "2.20170512"
-    }, 
 
     "json_version": 2
 }
