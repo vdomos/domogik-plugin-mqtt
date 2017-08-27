@@ -54,47 +54,28 @@ class MQTTManager(Plugin):
         """
         Plugin.__init__(self, name='mqtt')
 
-        # check if the plugin is configured. If not, this will stop the plugin and log an error
+        # Check if the plugin is configured. If not, this will stop the plugin and log an error
         if not self.check_configured():
             return
 
-        # ### get all config keys
+        # Get all config keys
         self.mqtthost = self.get_config("mqtt_host")  
         self.mqttport = self.get_config("mqtt_port")     
-        self.mqtttopic = []                             # Ex.: [("domogik/sensor1/#", 0), ("domogik/sensor2/#", 0)]
+        self.mqttprotocol = self.get_config("mqtt_protocol")        # Old protocol = MQTTv31 (3),  default = MQTTv311 (4)
 
-
-        # ### get the devices list
-        # for this plugin, if no devices are created we won't be able to use devices.
+        # Get the devices list, for this plugin, if no devices are created we won't be able to use devices.
         self.devices = self.get_device_list(quit_if_no_device=True)
         # self.log.info(u"==> device:   %s" % format(self.devices))
 
-        # get the sensors id per device :
+        # Get the sensors id per device :
         self.sensors = self.get_sensors(self.devices)
         # self.log.info(u"==> sensors:   %s" % format(self.sensors))        # ==> sensors:   {'device id': 'sensor name': 'sensor id'}
 
-        # ### For each device
-        self.device_list = {}
-        for a_device in self.devices:
-            # self.log.info(u"a_device:   %s" % format(a_device))
-
-            device_name = a_device["name"]                                      # Ex.: "Temp atelier"
-            device_id = a_device["id"]                                          # Ex.: "72"
-            device_type = a_device["device_type_id"]                            # Ex.: "mqtt.sensor_temperature | mqtt.cmd_switch | ..."
-            device_topic = self.get_parameter(a_device, "topic")                # Ex.: "domogik/maison/ateliertemp"
-            device_qos = self.get_parameter(a_device, "qos")                    # Ex.: 0
-            
-            self.device_list.update({device_id : {'name': device_name, 'topic': device_topic, 'type' : device_type, 'qos' : device_qos}})
-            self.log.info(u"==> Device '{0}', id '{1}', type '{2}', topic '{3}', qos '{4}'".format(device_name, device_id, device_type, device_topic, device_qos))
-            
-            if "sensor" in device_type:        
-                self.log.info(u"==> MQTT topic '%s' from server '%s:%s' will be subscribed for '%s' device Sensor" % (device_topic, self.mqtthost, int(self.mqttport), device_name))
-                self.mqtttopic.append(((str(device_topic) + '/#'), int(device_qos)))
-            else:
-                self.log.info(u"==> MQTT topic '%s' to server '%s:%s' will be published by '%s' device Command" % (device_topic, self.mqtthost, int(self.mqttport), device_name))
-
         # Init MQTT
-        self.mqttClient = MQTT(self.log, self.send_pub_data, self.get_stop(), self.mqtthost, self.mqttport, self.mqtttopic, self.device_list)
+        self.mqttClient = MQTT(self.log, self.send_pub_data, self.get_stop(), self.mqtthost, self.mqttport, self.mqttprotocol)
+
+        # Set MQTT devices list
+        self.setMqttDevicesList(self.devices)
 
         # Connect to MQTT server
         try:
@@ -105,29 +86,57 @@ class MQTTManager(Plugin):
             self.force_leave()
             return
 
-        # Start mqtt listen
+        # Start mqtt loop
         threads = {}
         thr_name = "mqtt-sub-listen"
         threads[thr_name] = threading.Thread(None,
-                                              self.mqttClient.listensub,
+                                              self.mqttClient.mqttloop,
                                               thr_name,
                                               (),
                                               {})
         threads[thr_name].start()
         self.register_thread(threads[thr_name])
-
+        
+        # Callback for new/update devices
+        self.log.info(u"==> Add callback for new/update devices.")
+        self.register_cb_update_devices(self.reload_devices)
+        
         self.ready()
 
 
-
+    # -------------------------------------------------------------------------------------------------
+    def setMqttDevicesList(self, devices):
+        self.log.info(u"==> Set MQTT devices list ...")
+        self.mqttdevices_list = {}  
+        self.mqttsubtopics = []                                         # Topics list to subscribe: [("domogik/sensor1/#", 0), ("domogik/sensor2/#", 0)]      
+        for a_device in devices:    # For each device
+            # self.log.info(u"a_device:   %s" % format(a_device))
+            device_topic = self.get_parameter(a_device, "topic")    # Ex.: "sensor/weather/temp"
+            device_qos = self.get_parameter(a_device, "qos")        # Ex.: 0
+            if "sensor" in a_device["device_type_id"]:  self.mqttsubtopics.append(((str(device_topic) + '/#'), int(device_qos)))        
+            self.mqttdevices_list.update(
+                {a_device["id"] : 
+                    {'name': a_device["name"], 
+                     'type' : a_device["device_type_id"], 
+                     'topic': device_topic, 
+                     'qos' : device_qos
+                    }
+                })
+            self.log.info(u"==> Device MQTT '{0}'" . format(self.mqttdevices_list[a_device["id"]]))
+        self.mqttClient.reloadMQTTDevices(self.mqttdevices_list, self.mqttsubtopics)
+            
+            
     # -------------------------------------------------------------------------------------------------
     def send_pub_data(self, device_id, value):
         """ Send the sensors values over MQ
         """
         data = {}
+#        sensor_device = self.sensors[device_id].keys()[0]       # Example: 'sensor_script_info_temperature'
+#        data[self.sensors[device_id][sensor_device]] = value    # data['id_sensor'] = value
+
         for sensor in self.sensors[device_id]:                  #
             data[self.sensors[device_id][sensor]] = value       # sensor = 'sensor name' in info.json file
-        self.log.debug(u"==> Update Sensor '%s' for device id %s (%s)" % (format(data), device_id, self.device_list[device_id]["name"]))    # {u'id': u'value'}
+        self.log.debug(u"==> Update Sensor '%s' for device id %s (%s)" % (format(data), device_id, self.mqttdevices_list[device_id]["name"]))    # {u'id': u'value'}
 
         try:
             self._pub.send_event('client.sensor', data)
@@ -150,17 +159,17 @@ class MQTTManager(Plugin):
 
             device_id = data["device_id"]
             command_id = data["command_id"]
-            if device_id not in self.device_list:
-                self.log.error(u"### MQ REQ command, Device ID '%s' unknown, Have you restarted the plugin after device creation ?" % device_id)
+            if device_id not in self.mqttdevices_list:
+                self.log.error(u"### MQ REQ command, Device ID '%s' unknown" % device_id)
                 status = False
                 reason = u"Plugin mqtt: Unknown device ID %d" % device_id
                 self.send_rep_ack(status, reason, command_id, "unknown") ;                      # Reply MQ REP (acq) to REQ command
                 return
 
-            device_name = self.device_list[device_id]["name"]
+            device_name = self.mqttdevices_list[device_id]["name"]
             self.log.info(u"==> Received for device '%s' MQ REQ command message: %s" % (device_name, format(data)))         # {u'value': u'1', u'command_id': 80, u'device_id': 193}
             
-            status, reason = self.mqttClient.pubcmd(self.device_list[device_id]["topic"], self.device_list[device_id]["qos"], data["value"], device_id)
+            status, reason = self.mqttClient.pubcmd(self.mqttdevices_list[device_id]["topic"], self.mqttdevices_list[device_id]["qos"], data["value"], device_id)
             if status:
                 self.send_pub_data(device_id, data["value"])    # Update sensor command.
             
@@ -178,6 +187,17 @@ class MQTTManager(Plugin):
         reply_msg.add_data('status', status)
         reply_msg.add_data('reason', reason)
         self.reply(reply_msg.get())
+
+
+    # -------------------------------------------------------------------------------------------------
+    def reload_devices(self, devices):
+        """ Called when some devices are added/deleted/updated
+        """
+        self.log.info(u"==> Reload Device called")
+        self.setMqttDevicesList(devices)
+        self.devices = devices
+        self.sensors = self.get_sensors(devices)
+
 
 if __name__ == "__main__":
     MQTTManager()

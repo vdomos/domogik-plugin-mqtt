@@ -32,6 +32,12 @@ On Debian jessie::
 	# pip install paho-mqtt
 
 
+.. warning:: 
+   On Debian Wheezy, mosquitto version is to old, don't support MQTT version 3.1.1 protocol. 
+   Choose MQTTv31 protocol in plugin configuration
+
+
+
 Plugin configuration
 ====================
 
@@ -42,9 +48,11 @@ Here is the global configuration:
 ===================== =========================== ======================================================================
 Key                   Type                        Description
 ===================== =========================== ======================================================================
-MQTT Host             string                      The hostnmae/@Ip of Mosquitto server
+MQTT Host             string                      The hostname/@Ip of Mosquitto server
 --------------------- --------------------------- ----------------------------------------------------------------------
 MQTT port             integer                     The TCP port of Mosquitto server
+--------------------- --------------------------- ----------------------------------------------------------------------
+MQTT protocol         Choice                      Select MQTTv31 protocol for old Mosquitto version
 ===================== =========================== ======================================================================
 
 

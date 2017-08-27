@@ -1,0 +1,85 @@
+{% extends theme("base/base.html") %}
+{% import theme("base/wtf.html") as wtf %}
+
+{% block content %}
+{% include theme("client_menu.html") %}
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        Highcharts.setOptions({
+            global: { 
+                useUTC: false 
+            }
+        });
+    });
+ 
+ 
+    $(function () {
+        $('#container').highcharts('StockChart', {
+            rangeSelector : {
+                buttonTheme: {
+                    width:100
+                },
+                buttons: [{
+                    type: 'day',
+                    count: 1,
+                    text: 'Day'
+                }, {
+                    type: 'week',
+                    count: 1,
+                    text: 'Week'
+                }, {
+                    type: 'month',
+                    count: 1,
+                    text: 'Month'
+                },{
+					type: 'all',
+					count: 1,
+					text: 'All'
+				}],
+                inputEnabled: true,
+                selected : 0    
+            },
+
+            title: {
+                text: '{{ device }}'
+            },
+            subtitle: {
+                text: 'Source {{ clientid }}'
+            },                        
+            xAxis: {
+                gridLineWidth: 1,
+            },
+            yAxis: {
+                title: {
+                    text: '{{ stype }} ({{ unit }})'
+                },
+                opposite: false,
+            },
+            legend: {
+                enabled: true
+            },
+            series: [{
+                name: "{{ stype }}",
+                type: 'line',
+                data: {{ data }},
+                color: '#A4A4A4',
+                lineWidth: 1,
+                tooltip: {
+                    valueDecimals: 1,
+                    valueSuffix: '{{ unit }}'
+                },
+            }]
+        }); 
+});
+    
+</script>
+
+<div id="container" style="min-width: 310px; max-width: 1000px;height: 400px; margin: 0 auto"></div>
+                
+{% endblock %}
