@@ -2,6 +2,11 @@
 Changelog
 =========
 
+2.0
+===
+
+* Add admin pages for displaying sensors and graphs
+
 0.5
 ===
 
