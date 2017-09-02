@@ -85,10 +85,10 @@ class MQTT:
         self.mqttport = mqttport
         self.mqttsubtopics = []        
         
-        self.numberSensors = ["mqtt.sensor_temperature", "mqtt.sensor_humidity", "mqtt.sensor_brightness",
-                              "mqtt.sensor_pressure", "mqtt.sensor_power", "mqtt.sensor_number"]
-        self.boolSensors = ["mqtt.sensor_onoff", "mqtt.sensor_openclose", "mqtt.sensor_enabledisable", 
-                            "mqtt.sensor_updown", "mqtt.sensor_lowhigh", "mqtt.sensor_state", "mqtt.sensor_motion"]
+        self.numberSensors = ["mqtt.sensor_temperature", "mqtt.sensor_humidity", "mqtt.sensor_scaling", "mqtt.sensor_brightness",
+                              "mqtt.sensor_pressure", "mqtt.sensor_power", "mqtt.sensor_level", "mqtt.sensor_value"]
+
+        self.boolSensors = ["mqtt.sensor_switch", "mqtt.sensor_opening", "mqtt.sensor_state", "mqtt.sensor_motion"]
         
         self.boolStrValue = {"false": "0", "true": "1", "off": "0", "on": "1", "disable": "0", 
                         "enable": "1", "low": "0", "high": "1", "decrease": "0", "increase": "1", 
