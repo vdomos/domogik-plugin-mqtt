@@ -340,6 +340,93 @@
                 }
             ]
         },
+        "mqtt.sensor_jsonvalue": {
+            "description": "",
+            "id": "mqtt.sensor_jsonvalue",
+            "name": "Json Value sensor",
+            "commands": [],
+            "sensors": ["value"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                },
+                {
+                    "description": "json query (result must be a number)",
+                    "key": "jsonquery",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": ""
+                }
+            ]
+        },
+        "mqtt.sensor_jsonstate": {
+            "description": "",
+            "id": "mqtt.sensor_jsonstate",
+            "name": "Json State sensor",
+            "commands": [],
+            "sensors": ["state"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                },
+                {
+                    "description": "json query (result must be a boolean)",
+                    "key": "jsonquery",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": ""
+                }
+            ]
+        },
+        "mqtt.sensor_jsonstring": {
+            "description": "",
+            "id": "mqtt.sensor_jsonstring",
+            "name": "Json String sensor",
+            "commands": [],
+            "sensors": ["string"],
+            "parameters": [
+                {
+                    "description": "MQTT topic to subscribe (ex.: domogik, domogik/sensor ...)",
+                    "key": "topic",
+                    "xpl" : false,
+                    "type": "string"
+                },
+                {
+                    "description": "MQTT Qos (Quality of service level to use => 0..2)",
+                    "key": "qos",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": "0"
+                },
+                {
+                    "description": "json query (result must be a string)",
+                    "key": "jsonquery",
+                    "xpl" : false,
+                    "type": "string",
+                    "default": ""
+                }
+            ]
+        },
         "mqtt.cmd_switch": {
             "description": "", 
             "id": "mqtt.cmd_switch", 

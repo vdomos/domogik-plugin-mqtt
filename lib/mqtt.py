@@ -40,6 +40,7 @@ import threading
 import time
 import datetime
 import platform
+import json
 import socket
 import paho.mqtt.client as mqtt     # https://pypi.python.org/pypi/paho-mqtt
 
@@ -86,15 +87,14 @@ class MQTT:
         self.mqttsubtopics = []        
         
         self.numberSensors = ["mqtt.sensor_temperature", "mqtt.sensor_humidity", "mqtt.sensor_scaling", "mqtt.sensor_brightness",
-                              "mqtt.sensor_pressure", "mqtt.sensor_power", "mqtt.sensor_level", "mqtt.sensor_value"]
-
-        self.boolSensors = ["mqtt.sensor_switch", "mqtt.sensor_opening", "mqtt.sensor_state", "mqtt.sensor_motion"]
+                              "mqtt.sensor_pressure", "mqtt.sensor_power", "mqtt.sensor_level", "mqtt.sensor_value", "mqtt.sensor_jsonvalue"]
+        self.boolSensors = ["mqtt.sensor_switch", "mqtt.sensor_opening", "mqtt.sensor_state", "mqtt.sensor_motion", "mqtt.sensor_jsonstate"]
         
         self.boolStrValue = {"false": "0", "true": "1", "off": "0", "on": "1", "disable": "0", 
-                        "enable": "1", "low": "0", "high": "1", "decrease": "0", "increase": "1", 
-                        "up": "0", "down": "1", "open": "0", "close": "1", "closed": "1", "stop": "0",
-                        "start": "1", "inactive": "0", "active": "1", "nomotion": "0", "motion": "1",
-                        "0": "0", "1": "1"}
+                             "enable": "1", "low": "0", "high": "1", "decrease": "0", "increase": "1", 
+                             "up": "0", "down": "1", "open": "0", "close": "1", "closed": "1", "stop": "0",
+                             "start": "1", "inactive": "0", "active": "1", "nomotion": "0", "motion": "1",
+                             "0": "0", "1": "1"}
         
         protocollist = {"MQTTv31" : 3, "MQTTv311" : 4}
         self.MQTTClient = mqtt.Client('mqtt2dmg_' + platform.node(), protocol=protocollist[mqttprotocol])
@@ -143,18 +143,20 @@ class MQTT:
         """
         self.log.info(u"==> Received subscribed MQTT message:  %s = %s" % (msg.topic, msg.payload))
         for deviceid in self.devicelist:        #  {'70' : {'name': 'Temp Atelier', 'topic': 'domogik/maison/ateliertemp', 'type' : 'mqtt.sensor_temperature', 'qos' : 0}}
-            if msg.topic ==  self.devicelist[deviceid]["topic"]:
-                if self.devicelist[deviceid]["type"] in self.numberSensors:
-                    if not self.is_number(msg.payload):
-                        self.log.error(u"### MQTT message '%s' for device '%s' not return a number: '%s'" % (msg.topic, self.devicelist[deviceid]["name"], msg.payload))
-                        return
-                elif self.devicelist[deviceid]["type"] in self.boolSensors:
-                    if msg.payload.lower() not in self.boolStrValue:
-                        self.log.error(u"### MQTT message '%s' for device '%s' not return a binary: '%s'" % (msg.topic, self.devicelist[deviceid]["name"], msg.payload))
-                        return
-                    msg.payload = self.boolStrValue[msg.payload.lower()]
-                    
-                self.send(deviceid, msg.payload.decode('utf-8', 'ignore'))      # Erreur "UnicodeDecodeError: 'ascii' codec can't decode byte" avec prevision pluie !
+            if msg.topic == self.devicelist[deviceid]["topic"]:
+                name = self.devicelist[deviceid]["name"]
+                devicetype = self.devicelist[deviceid]["type"]
+                val = msg.payload
+
+                if "json" in devicetype:
+                    status, val = self.parseJsonQuery(name, msg.topic, val, self.devicelist[deviceid]["jsonquery"])
+                    if status:
+                        status = self.checkValueType(name, msg.topic, devicetype, val)
+                else:
+                    status = self.checkValueType(name, msg.topic, devicetype, val)
+
+                if status:
+                    self.send(deviceid, val.decode('utf-8', 'ignore'))      # Erreur "UnicodeDecodeError: 'ascii' codec can't decode byte"
 
 
     # -------------------------------------------------------------------------------------------------
@@ -217,6 +219,66 @@ class MQTT:
         self.MQTTClient.subscribe(self.mqttsubtopics)
     
     
+    # -----------------------------------------------------------------------------
+    def parseJsonQuery(self, name, topic, strjson, jsonquery):
+        """ Parse value with jsonquery
+            name :      device name
+            topic :     sensor topic
+            strjson:    json string
+            jsonquery:  json query
+            "dataCadran|0|niveauPluieText"
+            "dataCadran|0|niveauPluie"
+            "isAvailable"
+        """
+        try:
+             jsonvalue = json.loads(strjson)
+        except ValueError, err:
+            errorstr = u"### MQTT Json message '%s' for device '%s' failed with query '%s': No JSON data (%s)" % (topic, name, jsonquery, err)
+            self.log.error(errorstr)
+            return False, errorstr
+
+        jsonquerylist = jsonquery.split('|')
+
+        for elem in jsonquerylist:
+            self.log.debug(u"==> Search '%s' key or index in json value" % elem)
+            try:
+                if self.is_number(elem):
+                    jsonvalue = jsonvalue[int(elem)]
+                else:
+                    jsonvalue = jsonvalue[elem]
+            except KeyError:
+                errorstr = u"### MQTT Json message '%s' for device '%s' failed with query '%s', KeyError with key '%s'" % (topic, name, jsonquery, elem)
+                self.log.error(errorstr)
+                return False, errorstr
+            except IndexError:
+                errorstr = u"### MQTT Json message '%s' for device '%s' failed with query '%s', IndexError with index '%s'" % (topic, name, jsonquery, elem)
+                self.log.error(errorstr)
+                return False, errorstr
+
+        return True, str(jsonvalue)
+
+
+    # -----------------------------------------------------------------------------
+    def checkValueType(self, name, topic, type, strvalue):
+        """ Check if a number sensor topic return a number value and  boolean topic return a boolean value
+            name :      device name
+            topic:      sensor topic
+            strvalue:   value in string format
+            type:       sensor type
+        """
+        if type in self.numberSensors:
+            if not self.is_number(strvalue):
+                errorstr = u"### MQTT message '%s' for device '%s' not return a number: '%s'" % (topic, name, strvalue)
+                self.log.error(errorstr)
+                return False
+        elif type in self.boolSensors:
+            if strvalue.lower() not in self.boolStrValue:
+                errorstr = u"### MQTT message '%s' for device '%s' not return a boolean: '%s'" % (topic, name, strvalue)
+                self.log.error(errorstr)
+                return False
+            strvalue = self.boolStrValue[strvalue.lower()]
+        return True
+
     # -------------------------------------------------------------------------------------------------
     def is_number(self, s):
         ''' Return 'True' if s is a number

@@ -111,15 +111,24 @@ class MQTTManager(Plugin):
         self.mqttsubtopics = []                                         # Topics list to subscribe: [("domogik/sensor1/#", 0), ("domogik/sensor2/#", 0)]      
         for a_device in devices:    # For each device
             # self.log.info(u"a_device:   %s" % format(a_device))
-            device_topic = self.get_parameter(a_device, "topic")    # Ex.: "sensor/weather/temp"
-            device_qos = self.get_parameter(a_device, "qos")        # Ex.: 0
-            if "sensor" in a_device["device_type_id"]:  self.mqttsubtopics.append(((str(device_topic) + '/#'), int(device_qos)))        
+            device_topic = self.get_parameter(a_device, "topic")                        # Ex.: "sensor/weather/temp"
+            device_qos = self.get_parameter(a_device, "qos")                            # Ex.: 0
+
+            if "json"  in a_device["device_type_id"]:
+                device_jsonquery = self.get_parameter(a_device, "jsonquery")            # Ex.: "dataCadran.0.niveauPluie"
+            else:
+                device_jsonquery = ""
+
+            if "sensor" in a_device["device_type_id"] and (str(device_topic), int(device_qos))  not in self.mqttsubtopics:
+                self.mqttsubtopics.append(((str(device_topic) + '/#'), int(device_qos)))
+
             self.mqttdevices_list.update(
                 {a_device["id"] : 
                     {'name': a_device["name"], 
                      'type' : a_device["device_type_id"], 
                      'topic': device_topic, 
-                     'qos' : device_qos
+                     'qos' : device_qos,
+                     'jsonquery': device_jsonquery
                     }
                 })
             self.log.info(u"==> Device MQTT '{0}'" . format(self.mqttdevices_list[a_device["id"]]))
@@ -136,7 +145,7 @@ class MQTTManager(Plugin):
 
         for sensor in self.sensors[device_id]:                  #
             data[self.sensors[device_id][sensor]] = value       # sensor = 'sensor name' in info.json file
-        self.log.debug(u"==> Update Sensor '%s' for device id %s (%s)" % (format(data), device_id, self.mqttdevices_list[device_id]["name"]))    # {u'id': u'value'}
+        self.log.debug(u"==> Update Sensor '%s' for device '%s'" % (format(data), self.mqttdevices_list[device_id]["name"]))    # {u'id': u'value'}
 
         try:
             self._pub.send_event('client.sensor', data)
